@@ -41,6 +41,7 @@ class Base(pl.LightningModule):
                             type=str,
                             default=None,
                             help='kobart model path')
+        
         return parser
     
     def setup_steps(self, stage=None):
