@@ -15,35 +15,7 @@ class Base(pl.LightningModule):
         super(Base, self).__init__()
         self.save_hyperparameters(hparams)
         self.trainer = trainer
-
-    # @staticmethod
-    # def add_model_specific_args(parent_parser):
-    #     # add model specific args
-    #     parser = argparse.ArgumentParser(
-    #         parents=[parent_parser], add_help=False)
-
-    #     parser.add_argument('--batch-size',
-    #                         type=int,
-    #                         default=14,
-    #                         help='batch size for training (default: 96)')
-
-    #     parser.add_argument('--lr',
-    #                         type=float,
-    #                         default=3e-5,
-    #                         help='The initial learning rate')
-
-    #     parser.add_argument('--warmup_ratio',
-    #                         type=float,
-    #                         default=0.1,
-    #                         help='warmup ratio')
-
-    #     parser.add_argument('--model_path',
-    #                         type=str,
-    #                         default=None,
-    #                         help='kobart model path')
         
-    #     return parser
-    
     def setup_steps(self, stage=None):
         # NOTE There is a problem that len(train_loader) does not work.
         # After updating to 1.5.2, NotImplementedError: `train_dataloader` · Discussion #10652 · PyTorchLightning/pytorch-lightning https://github.com/PyTorchLightning/pytorch-lightning/discussions/10652
