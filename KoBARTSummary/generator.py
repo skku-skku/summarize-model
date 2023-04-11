@@ -7,18 +7,10 @@ from transformers import BartForConditionalGeneration
 class KoBARTSummaryGenerator(Base):
     def __init__(self, hparams, **kwargs) -> None:
         super(KoBARTSummaryGenerator, self).__init__(hparams, **kwargs)
-        parser = argparse.ArgumentParser(add_help=False)
-        parser.add_argument('--model_path',
-                    type=str,
-                    help='model path')
-        
-        args = parser.parse_args()
-
-        super(KoBARTSummaryGenerator, self).__init__(hparams, **kwargs)
         # self.tokenizer = PreTrainedTokenizerFast.from_pretrained('digit82/kobart-summarization')
         # self.model = BartForConditionalGeneration.from_pretrained('digit82/kobart-summarization')
         self.tokenizer = get_kobart_tokenizer()
-        ckpt = torch.load(args.model_path)    
+        ckpt = torch.load(self.hparams.model_path)    
         kobart_model= BartForConditionalGeneration(self.hparams)
         kobart_model.load_state_dict(ckpt['model_state_dict'])
         # kobart_model = BartForConditionalGeneration.from_pretrained('./kobart_summary')
