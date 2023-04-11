@@ -12,48 +12,50 @@ from transformers import BartForConditionalGeneration, PreTrainedTokenizerFast
 from transformers.optimization import AdamW, get_cosine_schedule_with_warmup
 from .model import Base, KoBARTConditionalGeneration
 
-parser = argparse.ArgumentParser(description='KoBART Summarization')
+# parser = argparse.ArgumentParser(description='KoBART Summarization')
 
-parser.add_argument('--checkpoint_path',
-                    type=str,
-                    help='checkpoint path')
+# parser.add_argument('--checkpoint_path',
+#                     type=str,
+#                     help='checkpoint path')
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+# logger = logging.getLogger()
+# logger.setLevel(logging.INFO)
 
-class ArgsBase():
-    @staticmethod
-    def add_model_specific_args(parent_parser):
-        parser = argparse.ArgumentParser(
-            parents=[parent_parser], add_help=False)
-        parser.add_argument('--train_file',
-                            type=str,
-                            default='../data/train.csv',
-                            help='train file')
+# class ArgsBase():
+#     @staticmethod
+#     def add_model_specific_args(parent_parser):
+#         parser = argparse.ArgumentParser(
+#             parents=[parent_parser], add_help=False)
+#         parser.add_argument('--train_file',
+#                             type=str,
+#                             default='../data/train.csv',
+#                             help='train file')
 
-        parser.add_argument('--test_file',
-                            type=str,
-                            default='../data/test.csv',
-                            help='test file')
+#         parser.add_argument('--test_file',
+#                             type=str,
+#                             default='../data/test.csv',
+#                             help='test file')
 
-        parser.add_argument('--batch_size',
-                            type=int,
-                            default=14,
-                            help='')
-        parser.add_argument('--max_len',
-                            type=int,
-                            default=512,
-                            help='max seq len')
-        return parser
+#         parser.add_argument('--batch_size',
+#                             type=int,
+#                             default=14,
+#                             help='')
+#         parser.add_argument('--max_len',
+#                             type=int,
+#                             default=512,
+#                             help='max seq len')
+#         return parser
 
 class KoBARTConditionalGenerationTrainer():
-    def __init__(self) -> None:
-        parser = Base.add_model_specific_args(parser)
-        parser = ArgsBase.add_model_specific_args(parser)
-        parser = KobartSummaryModule.add_model_specific_args(parser)
-        parser = pl.Trainer.add_argparse_args(parser)
+    def __init__(self, args) -> None:
+        # parser = Base.add_model_specific_args(parser)
+        # parser = ArgsBase.add_model_specific_args(parser)
+        # parser = KobartSummaryModule.add_model_specific_args(parser)
+        # parser = pl.Trainer.add_argparse_args(parser)
         self.tokenizer = PreTrainedTokenizerFast.from_pretrained('gogamza/kobart-base-v1')
-        self.args = parser.parse_args()
+        self.args = args
+        logger = logging.getLogger()
+        logger.setLevel(logging.INFO)
 
     def train(self):
         logging.info(self.args)
@@ -76,7 +78,7 @@ class KoBARTConditionalGenerationTrainer():
                                                         mode='min',
                                                         save_top_k=3)
 
-        tb_logger = pl_loggers.TensorBoardLogger(os.path.join(self.args.default_root_dir, 'tb_logs'))
+        tb_logger = pl_loggers.TensorBoardLogger(os.path.join('tb_logs'))
         lr_logger = pl.callbacks.LearningRateMonitor()
         trainer = pl.Trainer.from_argparse_self.args(self.args, logger=tb_logger,
                                                 callbacks=[checkpoint_callback, lr_logger])
